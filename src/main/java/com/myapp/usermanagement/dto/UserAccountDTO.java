@@ -1,36 +1,21 @@
-package com.myapp.usermanagement.model;
+package com.myapp.usermanagement.dto;
 
-import javax.persistence.*;
+import com.myapp.usermanagement.model.UserAccount;
+
 import java.time.LocalDateTime;
 
-public class UserAccount {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class UserAccountDTO {
 
     private String username;
     private String password;
     private String firstName;
     private String lastName;
-
-    @Enumerated(EnumType.STRING)
-    private Role role;
-    @Enumerated(EnumType.STRING)
-    private Status status;
+    private UserAccount.Role role;
+    private UserAccount.Status status;
 
     private LocalDateTime created;
 
     // Getters and setters
-
-    public enum Role {
-        USER,
-        ADMIN
-    }
-
-    public enum Status {
-        ACTIVE,
-        INACTIVE
-    }
 
     public String getUsername() {
         return username;
@@ -64,27 +49,23 @@ public class UserAccount {
         this.lastName = lastName;
     }
 
-    public Role getRole() {
+    public UserAccount.Role getRole() {
         return role;
     }
 
-    public void setRole(Role role) {
+    public void setRole(UserAccount.Role role) {
         this.role = role;
     }
 
-    public Status getStatus() {
+    public UserAccount.Status getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(UserAccount.Status status) {
         this.status = status;
     }
 
     public LocalDateTime getCreated() {
         return created;
-    }
-
-    public void setCreated(LocalDateTime created) {
-        this.created = created;
     }
 }
