@@ -20,6 +20,13 @@ public class UserAccount {
 
     private LocalDateTime created;
 
+    public void updateInfo(String lastName, String firstName, String password, String username) {
+        this.lastName = lastName;
+        this.firstName = firstName;
+        this.password = password;
+        this.username = username;
+    }
+
     // Getters and setters
 
     public enum Role {
