@@ -41,6 +41,27 @@ public class UserAccountService {
         return false;  // Username not found
     }
 
+    @Transactional
+    public boolean softDeleteUser(Long userId) {//make user inactive
+        Optional<UserAccount> user = userAccountRepository.findById(userId);
+        if (user.isPresent()) {
+            UserAccount userAccount = user.get();
+            userAccount.setStatus(UserAccount.Status.INACTIVE);
+            userAccountRepository.save(userAccount);
+            return true;
+        }
+        return false;
+    }
+
+    @Transactional
+    public boolean hardDeleteUser(Long userId) { //permanently delete user
+        if (userAccountRepository.existsById(userId)) {
+            userAccountRepository.deleteById(userId);
+            return true;
+        }
+        return false;
+    }
+
     public UserAccount updateStatus(Long userId, UserAccount.Status status) {
         Optional<UserAccount> user = userAccountRepository.findById(userId);
         if(user.isPresent()) {
@@ -84,5 +105,9 @@ public class UserAccountService {
     public UserAccount fetchByUsername (String userName) {
         Optional<UserAccount> user = userAccountRepository.findByUsername(userName);
         return user.orElse(null);
+    }
+
+    public List<UserAccount> fetchAllUsers() {
+        return userAccountRepository.findAll();
     }
 }
