@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -109,5 +110,39 @@ public class UserAccountService {
 
     public List<UserAccount> fetchAllUsers() {
         return userAccountRepository.findAll();
+    }
+
+    @Transactional
+    public boolean requestAccountDeletion(Long userId) {
+        Optional<UserAccount> user = userAccountRepository.findById(userId);
+        if (user.isPresent()) {
+            UserAccount userAccount = user.get();
+            userAccount.setStatus(UserAccount.Status.INACTIVE);
+            userAccount.setDeletionRequestedAt(LocalDateTime.now()); // Store deletion request time
+            userAccountRepository.save(userAccount);
+            return true;
+        }
+        return false;
+    }
+
+    @Transactional
+    public boolean recoverAccount(Long userId) {
+        Optional<UserAccount> user = userAccountRepository.findById(userId);
+        if (user.isPresent() && user.get().getStatus() == UserAccount.Status.INACTIVE) {
+            UserAccount userAccount = user.get();
+            userAccount.setStatus(UserAccount.Status.ACTIVE);
+            userAccount.setDeletionRequestedAt(null); // Clear deletion request timestamp
+            userAccountRepository.save(userAccount);
+            return true;
+        }
+        return false;
+    }
+
+    @Transactional
+    public int permanentlyDeleteInactiveUsers(int days) {
+        LocalDateTime threshold = LocalDateTime.now().minusDays(days);
+        List<UserAccount> usersToDelete = userAccountRepository.findUsersForDeletion(threshold);
+        userAccountRepository.deleteAll(usersToDelete);
+        return usersToDelete.size();
     }
 }

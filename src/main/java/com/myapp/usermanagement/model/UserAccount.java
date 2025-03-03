@@ -19,6 +19,7 @@ public class UserAccount {
     private Status status;
 
     private LocalDateTime created;
+    private LocalDateTime deletionRequestedAt;
 
     public void updateInfo(String lastName, String firstName, String password, String username) {
         this.lastName = lastName;
@@ -93,5 +94,9 @@ public class UserAccount {
 
     public void setCreated(LocalDateTime created) {
         this.created = created;
+    }
+
+    public void setDeletionRequestedAt(LocalDateTime deletionRequestedAt) {
+        this.deletionRequestedAt = deletionRequestedAt;
     }
 }
