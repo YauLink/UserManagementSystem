@@ -1,0 +1,35 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>User Management</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+  <body>
+    <h2>User Management</h2>
+    <table>
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Username</th>
+        <th>Full Name</th>
+        <th>Role</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+          <tr th:each="user : ${users}">
+            <td th:text="${user.id}"></td>
+            <td th:text="${user.username}"></td>
+            <td th:text="${user.firstName + ' ' + user.lastName}"></td>
+            <td th:text="${user.role}"></td>
+            <td th:text="${user.status}"></td>
+              <td>
+                <a th:href="@{/admin/user/edit/{id}(id=${user.id})}">Edit</a>
+                <a th:href="@{/admin/user/delete/{id}(id=${user.id})}" onclick="return confirm('Are you sure?')">Delete</a>
+              </td>
+          </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

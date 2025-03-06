@@ -6,10 +6,13 @@ import com.myapp.usermanagement.service.UserAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Controller
+@RequestMapping("/admin")
 public class AdminController {
 
     @Autowired
@@ -33,7 +36,7 @@ public class AdminController {
         return user != null ? ResponseEntity.ok(user) : ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/delete/{userId}")
+    @DeleteMapping("/user/delete/{userId}")
     public ResponseEntity<String> hardDeleteUser(@PathVariable Long userId) {
         boolean success = userAccountService.hardDeleteUser(userId);
         return success
@@ -41,7 +44,7 @@ public class AdminController {
                 : ResponseEntity.badRequest().body("User not found or already deleted.");
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/user/{id}")
     public ResponseEntity<String> softDeleteUser(@PathVariable Long id) {
         boolean deleted = userAccountService.softDeleteUser(id);
         return deleted
@@ -55,7 +58,7 @@ public class AdminController {
         return ResponseEntity.ok(deletedCount + " users permanently deleted.");
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/user/{id}")
     public ResponseEntity<UserAccount> updateUser(
             @PathVariable Long id,
             @RequestBody UserAccountDTO accountDTO) {
@@ -63,7 +66,7 @@ public class AdminController {
         return (updatedUser != null) ? ResponseEntity.ok(updatedUser) : ResponseEntity.notFound().build();
     }
 
-    @PostMapping
+    @PostMapping("/user/create")
     public ResponseEntity<UserAccount> createUser(@RequestBody UserAccountDTO accountDTO) {
         UserAccount createdUser = userAccountService.createUser(accountDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
