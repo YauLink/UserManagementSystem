@@ -1,22 +1,28 @@
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>User Management</title>
   <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
-  <body>
-    <h2>User Management</h2>
+<body>
+  <div class="container">
+    <h1>All users</h1>
+
     <table>
       <thead>
-      <tr>
-        <th>ID</th>
-        <th>Username</th>
-        <th>Full Name</th>
-        <th>Role</th>
-        <th>Status</th>
-        <th>Actions</th>
-      </tr>
+        <tr>
+          <th>ID</th>
+          <th>Username</th>
+          <th>Full Name</th>
+          <th>Role</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
       </thead>
+
       <tbody>
           <tr th:each="user : ${users}">
             <td th:text="${user.id}"></td>
@@ -24,12 +30,20 @@
             <td th:text="${user.firstName + ' ' + user.lastName}"></td>
             <td th:text="${user.role}"></td>
             <td th:text="${user.status}"></td>
-              <td>
-                <a th:href="@{/admin/user/edit/{id}(id=${user.id})}">Edit</a>
-                <a th:href="@{/admin/user/delete/{id}(id=${user.id})}" onclick="return confirm('Are you sure?')">Delete</a>
-              </td>
+            <td>
+              <a th:href="@{/users/view/{id}(id=${user.id})}" class="btn btn-primary">View</a>
+              <a th:href="@{/users/edit/{id}(id=${user.id})}" class="btn btn-success">Edit</a>
+              <a th:href="@{/users/delete/{id}(id=${user.id})}" class="btn btn-danger">Delete</a>
+            </td>
           </tr>
       </tbody>
     </table>
-  </body>
+
+    <th:block sec:authorize="hasRole('ADMIN')">
+      <br>
+      <a th:href="@{/users/new}" class="btn btn-success">Create New User</a>
+    </th:block>
+
+  </div>
+</body>
 </html>

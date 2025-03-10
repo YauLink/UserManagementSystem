@@ -2,24 +2,51 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Edit User</title>
   <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-  <h2>Edit User</h2>
-  <form th:action="@{/user/update}" method="post" th:object="${user}">
-    <input type="hidden" th:field="*{id}">
+  <div class="container">
+    <h1>Edit User</h1>
 
-    <label for="username">Username:</label>
-    <input type="text" id="username" th:field="*{username}" required>
+    <form th:action="@{/users/edit/{id}(id=${user.id})}" method="post" th:object="${user}">
+      <input type="hidden" th:field="*{id}">
 
-    <label for="firstName">First Name:</label>
-    <input type="text" id="firstName" th:field="*{firstName}" required>
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" th:field="*{username}" required>
+      </div>
 
-    <label for="lastName">Last Name:</label>
-    <input type="text" id="lastName" th:field="*{lastName}" required>
+      <div class="form-group">
+        <label for="firstName">First Name</label>
+        <input type="text" id="firstName" th:field="*{firstName}" required>
+      </div>
 
-    <button type="submit">Save Changes</button>
-  </form>
+      <div class="form-group">
+        <label for="lastName">Last Name</label>
+        <input type="text" id="lastName" th:field="*{lastName}" required>
+      </div>
+
+      <div class="form-group">
+        <label for="role">Role</label>
+        <select id="role" th:field="*{role}">
+          <option value="USER">User</option>
+          <option value="ADMIN">Admin</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="status">Status</label>
+        <select id="status" th:field="*{status}">
+          <option value="ACTIVE">Active</option>
+          <option value="INACTIVE">Inactive</option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn btn-primary" onclick="window.location.href='/users'">Update User</button>
+      <button type="button" class="btn btn-secondary" onclick="window.location.href='/users'">Cancel</button>
+    </form>
+  </div>
 </body>
 </html>

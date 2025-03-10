@@ -2,16 +2,23 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>User Profile</title>
   <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-  <h2>User Profile</h2>
-  <p><strong>Username:</strong> <span th:text="${user.username}"></span></p>
-  <p><strong>Full Name:</strong> <span th:text="${user.firstName + ' ' + user.lastName}"></span></p>
-  <p><strong>Role:</strong> <span th:text="${user.role}"></span></p>
-  <p><strong>Status:</strong> <span th:text="${user.status}"></span></p>
+  <div class="container">
+    <h1>User Profile</h1>
 
-  <a th:href="@{/user/edit}">Edit Profile</a>
+    <p><strong>ID:</strong> <span th:text="${user.id}"></span></p>
+    <p><strong>Username:</strong> <span th:text="${user.username}"></span></p>
+    <p><strong>First Name:</strong> <span th:text="${user.firstName}"></span></p>
+    <p><strong>Last Name:</strong> <span th:text="${user.lastName}"></span></p>
+    <p><strong>Role:</strong> <span th:text="${user.role}"></span></p>
+    <p><strong>Status:</strong> <span th:text="${user.status}"></span></p>
+
+    <a th:href="@{/users}" class="btn btn-secondary">Back to List</a>
+    <a th:href="@{/users}" class="btn btn-secondary">Edit user</a>
+  </div>
 </body>
 </html>
