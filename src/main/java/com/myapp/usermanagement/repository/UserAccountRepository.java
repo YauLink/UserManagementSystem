@@ -10,7 +10,5 @@ import java.util.Optional;
 public interface UserAccountRepository extends JpaRepository<UserAccount, Long> {
 
     Optional<UserAccount> findByUsername(String username);
-    List<UserAccount> findByRole(UserAccount.Role role);
-    List<UserAccount> findByStatus(UserAccount.Status status);
     List<UserAccount> findUsersForDeletion(LocalDateTime threshold);
 }
