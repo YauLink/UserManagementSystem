@@ -25,15 +25,17 @@
 
       <tbody>
           <tr th:each="user : ${users}">
-            <td th:text="${user.id}"></td>
-            <td th:text="${user.username}"></td>
-            <td th:text="${user.firstName + ' ' + user.lastName}"></td>
-            <td th:text="${user.role}"></td>
-            <td th:text="${user.status}"></td>
+            <td th:text="${user.id != null ? user.id : 'N/A'}"></td>
+            <td th:text="${user.username != null ? user.username : 'N/A'}"></td>
+            <td th:text="${user.firstName != null ? user.firstName : ''} + ' ' + ${user.lastName != null ? user.lastName : ''}"></td>
+            <td th:text="${user.role != null ? user.role : 'N/A'}"></td>
+            <td th:text="${user.status != null ? user.status : 'N/A'}"></td>
             <td>
-              <a th:href="@{/users/view/{id}(id=${user.id})}" class="btn btn-primary">View</a>
-              <a th:href="@{/users/edit/{id}(id=${user.id})}" class="btn btn-success">Edit</a>
-              <a th:href="@{/users/delete/{id}(id=${user.id})}" class="btn btn-danger">Delete</a>
+              <a th:href="@{/admin/users/view/{id}(id=${user.id})}" class="btn btn-primary">View</a>
+              <a th:href="@{/admin/users/edit/{id}(id=${user.id})}" class="btn btn-success">Edit</a>
+              <form th:action="@{/admin/users/delete/{id}(id=${user.id})}" method="post" style="display:inline;">
+                <button type="submit" class="btn btn-danger">Delete</button>
+              </form>
             </td>
           </tr>
       </tbody>
