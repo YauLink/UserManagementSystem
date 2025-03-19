@@ -46,14 +46,14 @@ public class AdminController {
             return "redirect:/admin/users?error=UserNotFound";
         }
         model.addAttribute("user", user);
-        return "userDetails"; // Reuses userDetails.html
+        return "userView";
     }
 
     // Show the user creation form
     @GetMapping("/users/new")
     public String showCreateUserForm(Model model) {
         model.addAttribute("user", new UserAccountDTO());
-        return "userForm"; // Renders userForm.html
+        return "userEdit";
     }
 
     // Handle user creation (form submission)
@@ -71,7 +71,7 @@ public class AdminController {
             return "redirect:/admin/users?error=UserNotFound";
         }
         model.addAttribute("user", user);
-        return "userForm"; // Reuses userForm.html for editing
+        return "userEdit";
     }
 
     // Handle user update (form submission)

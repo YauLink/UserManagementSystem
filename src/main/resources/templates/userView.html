@@ -18,7 +18,7 @@
     <p><strong>Status:</strong> <span th:text="${user.status}"></span></p>
 
     <a th:href="@{/users}" class="btn btn-secondary">Back to List</a>
-    <a th:href="@{/users}" class="btn btn-secondary">Edit user</a>
+    <a th:href="@{/users/edit/{id}(id=${user.id})}" class="btn btn-primary">Edit User</a>
   </div>
 </body>
 </html>

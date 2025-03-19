@@ -10,7 +10,7 @@
   <div class="container">
     <h1>Edit User</h1>
 
-    <form th:action="@{/users/edit/{id}(id=${user.id})}" method="post" th:object="${user}">
+    <form th:action="@{/users/update/{id}(id=${user.id})}" method="post" th:object="${user}">
       <input type="hidden" th:field="*{id}">
 
       <div class="form-group">
@@ -44,7 +44,7 @@
         </select>
       </div>
 
-      <button type="submit" class="btn btn-primary" onclick="window.location.href='/users'">Update User</button>
+      <button type="submit" class="btn btn-primary">Update User</button>
       <button type="button" class="btn btn-secondary" onclick="window.location.href='/users'">Cancel</button>
     </form>
   </div>
