@@ -40,7 +40,9 @@ public class AdminController {
 
     // Show user details by username
     @GetMapping("/users/username/{username}")
-    public String showUserByUsername(@PathVariable String username, Model model) {
+    public String showUserByUsername(
+            @PathVariable String username,
+            Model model) {
         UserAccount user = userAccountService.fetchByUsername(username);
         if (user == null) {
             return "redirect:/admin/users?error=UserNotFound";

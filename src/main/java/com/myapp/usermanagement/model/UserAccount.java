@@ -3,6 +3,8 @@ package com.myapp.usermanagement.model;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "user_accounts")
 public class UserAccount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,7 +20,7 @@ public class UserAccount {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    private LocalDateTime created;
+    private LocalDateTime createdDate;
     private LocalDateTime deletionRequestedAt;
 
     public void updateInfo(String lastName, String firstName, String password, String username) {
@@ -38,6 +40,15 @@ public class UserAccount {
     public enum Status {
         ACTIVE,
         INACTIVE
+    }
+
+
+    public void setId(long l) {
+        this.id = l;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getUsername() {
@@ -88,12 +99,12 @@ public class UserAccount {
         this.status = status;
     }
 
-    public LocalDateTime getCreated() {
-        return created;
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
     }
 
-    public void setCreated(LocalDateTime created) {
-        this.created = created;
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
     }
 
     public void setDeletionRequestedAt(LocalDateTime deletionRequestedAt) {

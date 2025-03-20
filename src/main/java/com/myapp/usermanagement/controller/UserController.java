@@ -1,3 +1,4 @@
+
 package com.myapp.usermanagement.controller;
 
 import com.myapp.usermanagement.dto.UserAccountDTO;
@@ -6,51 +7,64 @@ import com.myapp.usermanagement.service.UserAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/user")
 public class UserController {
     private final UserAccountService userAccountService;
 
+    public UserController(){
+        userAccountService = null;
+    };
+
     @Autowired
     public UserController(UserAccountService userAccountService) {
         this.userAccountService = userAccountService;
     }
 
+    // Show exact user
     @GetMapping("/{id}")
-    public ResponseEntity<UserAccount> getUserById(@PathVariable Long id) {
+    public String getUserById(@PathVariable Long id, Model model) {
         UserAccount user = userAccountService.fetchById(id);
-        return (user != null) ? ResponseEntity.ok(user) : ResponseEntity.notFound().build();
+        if (user == null) {
+            return "redirect:/users?error=UserNotFound";
+        }
+        model.addAttribute("user", user);
+        return "userView";
     }
 
-    @GetMapping("/username/{username}")
-    public ResponseEntity<UserAccount> getUserByUsername(@PathVariable String username) {
-        UserAccount user = userAccountService.fetchByUsername(username);
-        return (user != null) ? ResponseEntity.ok(user) : ResponseEntity.notFound().build();
+    // Show user list
+    @GetMapping
+    public String showAllUsers(Model model) {
+        List<UserAccount> users = userAccountService.fetchAllUsers();
+        model.addAttribute("users", users);
+        return "userList";
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<UserAccount> updateUser(
+    // Updating profile
+    @PutMapping("/{id}/edit")
+    public String updateUser(
             @PathVariable Long id,
             @RequestBody UserAccountDTO accountDTO) {
-        UserAccount updatedUser = userAccountService.updateUserInformation(id, accountDTO);
-        return (updatedUser != null) ? ResponseEntity.ok(updatedUser) : ResponseEntity.notFound().build();
+        userAccountService.updateUserInformation(id, accountDTO);
+        return "redirect:/users/" + id;
     }
 
+    // Account deletion
     @PostMapping("/{userId}/delete")
-    public ResponseEntity<String> requestAccountDeletion(@PathVariable Long userId) {
-        boolean success = userAccountService.requestAccountDeletion(userId);
-        return success
-                ? ResponseEntity.ok("Account deletion requested. You can recover your account within N days.")
-                : ResponseEntity.badRequest().body("User not found.");
+    public String requestAccountDeletion(@PathVariable Long userId) {
+        userAccountService.requestAccountDeletion(userId);
+        return "redirect:/users";
     }
 
+    // Account recovery
     @PostMapping("/{userId}/recover")
-    public ResponseEntity<String> recoverAccount(@PathVariable Long userId) {
-        boolean success = userAccountService.recoverAccount(userId);
-        return success
-                ? ResponseEntity.ok("Account successfully recovered.")
-                : ResponseEntity.badRequest().body("Account recovery failed. Account may not exist or is already deleted.");
+    public String recoverAccount(@PathVariable Long userId) {
+        userAccountService.recoverAccount(userId);
+        return "redirect:/users";
     }
 }

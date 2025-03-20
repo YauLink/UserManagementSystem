@@ -3,13 +3,11 @@ package com.myapp.usermanagement.service;
 import com.myapp.usermanagement.dto.UserAccountDTO;
 import com.myapp.usermanagement.model.UserAccount;
 import com.myapp.usermanagement.repository.UserAccountRepository;
-import org.h2.engine.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.time.LocalDateTime;
@@ -19,8 +17,12 @@ import java.util.Optional;
 @Service
 public class UserAccountService {
 
+    private final UserAccountRepository userAccountRepository;
+
     @Autowired
-    private UserAccountRepository userAccountRepository;
+    public UserAccountService(UserAccountRepository userAccountRepository) {
+        this.userAccountRepository = userAccountRepository;
+    }
 
     @Transactional
     public UserAccount createUser(UserAccountDTO accountDTO) {
@@ -31,7 +33,7 @@ public class UserAccountService {
         userAccount.setLastName(accountDTO.getLastName());
         userAccount.setRole(accountDTO.getRole());
         userAccount.setStatus(accountDTO.getStatus());
-        userAccount.setCreated(accountDTO.getCreated());
+        userAccount.setCreatedDate(accountDTO.getCreated());
 
         return userAccountRepository.save(userAccount);
     }
