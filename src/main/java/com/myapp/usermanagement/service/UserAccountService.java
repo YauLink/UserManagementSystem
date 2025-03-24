@@ -69,7 +69,7 @@ public class UserAccountService {
         return false;
     }
 
-    public UserAccount updateStatus(Long userId, UserAccount.Status status) {
+    /*public UserAccount updateStatus(Long userId, UserAccount.Status status) {
         Optional<UserAccount> user = userAccountRepository.findById(userId);
         if(user.isPresent()) {
             UserAccount userAccount = user.get();
@@ -87,7 +87,7 @@ public class UserAccountService {
             return userAccountRepository.save(userAccount);
         }
         return null;
-    }
+    }*/
 
     public UserAccount updateUserInformation(Long userId, UserAccountDTO accountDTO) {
         Optional<UserAccount> user = userAccountRepository.findById(userId);
