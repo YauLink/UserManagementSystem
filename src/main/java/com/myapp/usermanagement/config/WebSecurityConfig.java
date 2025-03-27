@@ -1,4 +1,3 @@
-/*
 package com.myapp.usermanagement.config;
 
 import com.myapp.usermanagement.service.UserAccountService;
@@ -51,4 +50,3 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .permitAll();
     }
 }
-*/

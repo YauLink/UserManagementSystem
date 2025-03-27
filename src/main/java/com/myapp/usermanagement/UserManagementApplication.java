@@ -12,7 +12,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @ComponentScan(basePackages = "com.myapp.usermanagement")
 @EnableJpaRepositories(basePackages = "com.myapp.usermanagement.repository")
 @EntityScan(basePackages = "com.myapp.usermanagement.model")
-@EnableAutoConfiguration(exclude = {SecurityAutoConfiguration.class})
+/*@EnableAutoConfiguration(exclude = {SecurityAutoConfiguration.class})*/
 public class UserManagementApplication {
 
 	public static void main(String[] args) {

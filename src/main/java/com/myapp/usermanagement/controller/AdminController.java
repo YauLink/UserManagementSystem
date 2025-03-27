@@ -76,12 +76,12 @@ public class AdminController {
         return "userEdit";
     }
 
-    // Handle user update (form submission)
+    /*// Handle user update (form submission)
     @PostMapping("/users/update/{id}")
     public String updateUser(@PathVariable Long id, @ModelAttribute("user") UserAccountDTO accountDTO) {
         userAccountService.updateUserInformation(id, accountDTO);
         return "redirect:/admin/users?success=UserUpdated";
-    }
+    }*/
 
     // Soft delete user
     @GetMapping("/users/delete/{id}")
