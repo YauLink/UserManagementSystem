@@ -20,10 +20,9 @@ import java.util.Map;
 @RequestMapping("/admin")
 public class AdminController {
 
-    @Autowired
+
     private final UserAccountService userAccountService;
 
-    @Autowired
     public AdminController(UserAccountService userAccountService) {
         this.userAccountService = userAccountService;
     }

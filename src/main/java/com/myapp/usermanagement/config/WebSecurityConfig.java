@@ -9,10 +9,11 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig {
 
     private final UserAccountService userAccountService;
 
@@ -20,10 +21,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         this.userAccountService = userAccountService;
     }
 
-    // Load user details from the database
     @Bean
     public UserDetailsService userDetailsService() {
-        return userAccountService::loadUserByUsername; // Method from our UserAccountService
+        return userAccountService::loadUserByUsername;
     }
 
     @Bean
@@ -32,21 +32,24 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    protected void configure(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
         http
                 .authorizeRequests()
-                    .antMatchers("/admin/**").hasRole("ADMIN")  // Only admins can access /admin/** pages
-                    .antMatchers("/users/**").authenticated()   // Users must be logged in
-                    .antMatchers("/", "/login", "/register").permitAll()  // Public pages
-                    .and()
+                .antMatchers("/", "/login", "/register").permitAll()
+                .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/user/**").authenticated()
+                .and()
                 .formLogin()
-                    .loginPage("/login")
-                    .defaultSuccessUrl("/users", true)
-                    .permitAll()
-                    .and()
+                .loginPage("/login")
+                .defaultSuccessUrl("/user", true)
+                .permitAll()
+                .and()
                 .logout()
-                    .logoutUrl("/logout")
-                    .logoutSuccessUrl("/login?logout")
-                    .permitAll();
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login?logout")
+                .permitAll();
+
+        return http.build();
     }
 }
