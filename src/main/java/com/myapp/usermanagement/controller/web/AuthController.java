@@ -1,4 +1,4 @@
-package com.myapp.usermanagement.controller;
+package com.myapp.usermanagement.controller.web;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
