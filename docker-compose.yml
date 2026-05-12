@@ -1,0 +1,17 @@
+version: '3.9'
+
+services:
+  usermanagement_app:
+    build: .
+    container_name: usermanagement_app
+
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:h2:mem:testdb
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.h2.Driver
+      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.H2Dialect
+      SPRING_H2_CONSOLE_ENABLED: "true"
+
+    ports:
+      - "8083:8083"
+
+    restart: unless-stopped
