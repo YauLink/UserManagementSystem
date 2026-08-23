@@ -4,20 +4,25 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "user_accounts")
+@Table(name = "users", schema = "passengers")
 public class UserAccount {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long id;
-
+    @Column(name = "username")
     private String username;
+    @Column(name = "password")
     private String password;
+    @Column(name = "firstName")
     private String firstName;
+    @Column(name = "lastName")
     private String lastName;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "role")
     private Role role;
     @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private Status status;
 
     private LocalDateTime createdDate;
@@ -43,7 +48,7 @@ public class UserAccount {
     }
 
 
-    public void setId(long l) {
+    public void setId(Long l) {
         this.id = l;
     }
 
