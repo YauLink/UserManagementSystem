@@ -1,24 +1,72 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>User Profile</title>
   <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
+
 <body>
-  <div class="container">
-    <h1>User Profile</h1>
 
-    <p><strong>ID:</strong> <span th:text="${user.id}"></span></p>
-    <p><strong>Username:</strong> <span th:text="${user.username}"></span></p>
-    <p><strong>First Name:</strong> <span th:text="${user.firstName}"></span></p>
-    <p><strong>Last Name:</strong> <span th:text="${user.lastName}"></span></p>
-    <p><strong>Role:</strong> <span th:text="${user.role}"></span></p>
-    <p><strong>Status:</strong> <span th:text="${user.status}"></span></p>
+<div class="container">
 
-    <a th:href="@{/users}" class="btn btn-secondary">Back to List</a>
-    <a th:href="@{/users/edit/{id}(id=${user.id})}" class="btn btn-primary">Edit User</a>
-  </div>
+  <h1>User Profile</h1>
+
+  <p>
+    <strong>User ID:</strong>
+    <span th:text="${user.id}"></span>
+  </p>
+
+  <p>
+    <strong>Username:</strong>
+    <span th:text="${user.username}"></span>
+  </p>
+
+  <p>
+    <strong>First Name:</strong>
+    <span th:text="${user.firstName}"></span>
+  </p>
+
+  <p>
+    <strong>Last Name:</strong>
+    <span th:text="${user.lastName}"></span>
+  </p>
+
+  <p>
+    <strong>Role:</strong>
+    <span th:text="${user.role}"></span>
+  </p>
+
+  <p>
+    <strong>Status:</strong>
+    <span th:text="${user.status}"></span>
+  </p>
+
+  <p>
+    <strong>Created Date:</strong>
+    <span th:text="${user.createdDate}"></span>
+  </p>
+
+  <p>
+    <strong>Deletion Requested At:</strong>
+    <span th:text="${user.deletionRequestedAt != null
+                        ? user.deletionRequestedAt
+                        : 'N/A'}">
+        </span>
+  </p>
+
+  <a th:href="@{/users}"
+     class="btn btn-secondary">
+    Back to List
+  </a>
+
+  <a th:href="@{/users/edit/{id}(id=${user.id})}"
+     class="btn btn-primary">
+    Edit User
+  </a>
+
+</div>
 </body>
 </html>

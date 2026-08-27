@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
@@ -7,45 +8,93 @@
   <title>User Management</title>
   <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
+
 <body>
-  <div class="container">
-    <h1>All users</h1>
 
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Username</th>
-          <th>Full Name</th>
-          <th>Role</th>
-          <th>Status</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
+<div class="container">
 
-      <tbody>
-          <tr th:each="user : ${users}">
-            <td th:text="${user.id != null ? user.id : 'N/A'}"></td>
-            <td th:text="${user.username != null ? user.username : 'N/A'}"></td>
-            <td th:text="${user.firstName != null ? user.firstName : ''} + ' ' + ${user.lastName != null ? user.lastName : ''}"></td>
-            <td th:text="${user.role != null ? user.role : 'N/A'}"></td>
-            <td th:text="${user.status != null ? user.status : 'N/A'}"></td>
-            <td>
-              <a th:href="@{/admin/users/view/{id}(id=${user.id})}" class="btn btn-primary">View</a>
-              <a th:href="@{/admin/users/edit/{id}(id=${user.id})}" class="btn btn-success">Edit</a>
-              <form th:action="@{/admin/users/delete/{id}(id=${user.id})}" method="post" style="display:inline;">
-                <button type="submit" class="btn btn-danger">Delete</button>
-              </form>
-            </td>
-          </tr>
-      </tbody>
-    </table>
+  <h1>All Users</h1>
 
-    <th:block sec:authorize="hasRole('ADMIN')">
-      <br>
-      <a th:href="@{/users/new}" class="btn btn-success">Create New User</a>
-    </th:block>
+  <table>
+    <thead>
+    <tr>
+      <th>User ID</th>
+      <th>Username</th>
+      <th>Full Name</th>
+      <th>Role</th>
+      <th>Status</th>
+      <th>Created Date</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
 
-  </div>
+    <tbody>
+
+    <tr th:each="user : ${users}">
+
+      <td th:text="${user.id != null ? user.id : 'N/A'}">
+        N/A
+      </td>
+
+      <td th:text="${user.username != null ? user.username : 'N/A'}">
+        N/A
+      </td>
+
+      <td th:text="${(user.firstName != null ? user.firstName : '') + ' ' +
+                          (user.lastName != null ? user.lastName : '')}">
+      </td>
+
+      <td th:text="${user.role != null ? user.role : 'N/A'}">
+        N/A
+      </td>
+
+      <td th:text="${user.status != null ? user.status : 'N/A'}">
+        N/A
+      </td>
+
+      <td th:text="${user.createdDate != null ? user.createdDate : 'N/A'}">
+        N/A
+      </td>
+
+      <td>
+        <a th:href="@{/users/view/{id}(id=${user.id})}"
+           class="btn btn-primary">
+          View
+        </a>
+
+        <a th:href="@{/users/edit/{id}(id=${user.id})}"
+           class="btn btn-success">
+          Edit
+        </a>
+
+        <form th:action="@{/users/delete/{id}(id=${user.id})}"
+              method="post"
+              style="display:inline;">
+
+          <button type="submit"
+                  class="btn btn-danger">
+            Delete
+          </button>
+
+        </form>
+      </td>
+
+    </tr>
+
+    </tbody>
+  </table>
+
+  <th:block sec:authorize="hasRole('ADMIN')">
+
+    <br>
+
+    <a th:href="@{/users/new}"
+       class="btn btn-success">
+      Create New User
+    </a>
+
+  </th:block>
+
+</div>
 </body>
 </html>
