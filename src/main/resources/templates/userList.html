@@ -32,40 +32,31 @@
     <tbody>
 
     <tr th:each="user : ${users}">
-
-      <!-- user_id -->
       <td th:text="${user.id}">
         N/A
       </td>
 
-      <!-- username -->
       <td th:text="${user.username}">
         N/A
       </td>
 
-      <!-- first_name + last_name -->
       <td th:text="${(user.firstName != null ? user.firstName : '') + ' ' +
                           (user.lastName != null ? user.lastName : '')}">
       </td>
 
-      <!-- role -->
       <td th:text="${user.role}">
         N/A
       </td>
 
-      <!-- status -->
       <td th:text="${user.status}">
         N/A
       </td>
 
-      <!-- created_date -->
       <td th:text="${user.createdDate != null ? user.createdDate : 'N/A'}">
         N/A
       </td>
 
-      <!-- Actions -->
       <td>
-
         <a th:href="@{/users/view/{id}(id=${user.id})}"
            class="btn btn-primary">
           View
@@ -90,23 +81,17 @@
       </td>
 
     </tr>
-
     </tbody>
   </table>
 
   <th:block sec:authorize="hasRole('ADMIN')">
-
     <br>
-
     <a th:href="@{/users/new}"
        class="btn btn-success">
       Create New User
     </a>
-
   </th:block>
 
 </div>
-
 </body>
 </html>
-```

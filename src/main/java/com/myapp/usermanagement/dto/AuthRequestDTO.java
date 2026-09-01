@@ -1,0 +1,39 @@
+package com.myapp.usermanagement.dto;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
+public class AuthRequestDTO {
+
+    @NotBlank(message = "Username is required")
+    @Size(max = 50, message = "Username must be up to 50 characters")
+    private String username;
+
+    @NotBlank(message = "Password is required")
+    @Size(max = 100, message = "Password must be up to 100 characters")
+    private String password;
+
+    public AuthRequestDTO() {
+    }
+
+    public AuthRequestDTO(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+}

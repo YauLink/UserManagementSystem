@@ -9,18 +9,23 @@ public class UserAccount {
     @Id
     @Column(name = "user_id")
     private Long id;
+
     @Column(name = "username")
     private String username;
+
     @Column(name = "password")
     private String password;
+
     @Column(name = "firstName")
     private String firstName;
+
     @Column(name = "lastName")
     private String lastName;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private Role role;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private Status status;
