@@ -2,45 +2,16 @@ package com.myapp.usermanagement.dto;
 
 public class AuthResponseDTO {
 
-    private boolean success;
-    private String message;
     private Long userId;
-    private String username;
     private String fullName;
-    private String role;
+    private String message;
 
     public AuthResponseDTO() {
     }
 
-    public AuthResponseDTO(
-            boolean success,
-            String message,
-            Long userId,
-            String username,
-            String fullName,
-            String role) {
-
-        this.success = success;
-        this.message = message;
+    public AuthResponseDTO(Long userId, String fullName, String message) {
         this.userId = userId;
-        this.username = username;
         this.fullName = fullName;
-        this.role = role;
-    }
-
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public void setSuccess(boolean success) {
-        this.success = success;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
         this.message = message;
     }
 
@@ -52,14 +23,6 @@ public class AuthResponseDTO {
         this.userId = userId;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public String getFullName() {
         return fullName;
     }
@@ -68,11 +31,11 @@ public class AuthResponseDTO {
         this.fullName = fullName;
     }
 
-    public String getRole() {
-        return role;
+    public String getMessage() {
+        return message;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

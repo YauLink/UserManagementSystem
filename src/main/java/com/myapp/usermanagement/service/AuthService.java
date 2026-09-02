@@ -22,9 +22,6 @@ public class AuthService {
 
         if (userOptional.isEmpty()) {
             return new AuthResponseDTO(
-                    false,
-                    null,
-                    null,
                     null,
                     null,
                     "Invalid username or password"
@@ -35,20 +32,16 @@ public class AuthService {
 
         if (user.getStatus() != UserAccount.Status.ACTIVE) {
             return new AuthResponseDTO(
-                    false,
-                    null,
-                    null,
                     null,
                     null,
                     "User account is inactive"
             );
         }
 
+        // Temporary plain-text comparison.
+        // Replace with PasswordEncoder/BCrypt later.
         if (!user.getPassword().equals(password)) {
             return new AuthResponseDTO(
-                    false,
-                    null,
-                    null,
                     null,
                     null,
                     "Invalid username or password"
@@ -58,13 +51,9 @@ public class AuthService {
         String fullName = user.getFirstName() + " " + user.getLastName();
 
         return new AuthResponseDTO(
-                true,
-                "Authentication successful",
                 user.getId(),
                 fullName,
-                user.getUsername(),
-                user.getRole().name()
-
+                "Authentication successful"
         );
     }
 }
