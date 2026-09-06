@@ -38,8 +38,6 @@ public class AuthService {
             );
         }
 
-        // Temporary plain-text comparison.
-        // Replace with PasswordEncoder/BCrypt later.
         if (!user.getPassword().equals(password)) {
             return new AuthResponseDTO(
                     null,

@@ -20,17 +20,4 @@ public interface UserAccountRepository extends JpaRepository<UserAccount, Long> 
 
     @Query("SELECT u FROM UserAccount u WHERE u.createdDate < :date")
     List<UserAccount> findUsersForDeletion(@Param("date") LocalDateTime someDate);
-
-    /*@Modifying
-    @Query("DELETE FROM UserAccount u WHERE u.status = 'INACTIVE' AND u.deletionRequestedAt <= :threshold")
-    int permanentlyDeleteInactiveUsers(@Param("threshold")LocalDateTime threshold);
-
-    @Modifying
-    @Query("UPDATE UserAccount u SET u.status = 'ACTIVE', u.deletionRequestedAt = NULL WHERE u.id = :userId")
-    int recoverAccount(Long userId);
-
-    @Modifying
-    @Query("UPDATE UserAccount u SET u.status = 'INACTIVE', u.deletionRequestedAt = :deletionRequestedAt WHERE u.id = :userId")
-    int requestAccountDeletion(Long userId, LocalDateTime deletionRequestedAt);*/
-
 }
