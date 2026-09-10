@@ -27,23 +27,25 @@ public class WebSecurityConfig {
         return userAccountService::loadUserByUsername;
     }
 
-    /*@Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }*/
     @Bean
     public PasswordEncoder passwordEncoder() {
         return NoOpPasswordEncoder.getInstance();
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(
+            HttpSecurity http) throws Exception {
 
         http
+                .csrf()
+                .ignoringAntMatchers("/api/**")
+                .and()
                 .authorizeRequests()
                 .antMatchers("/", "/login", "/register").permitAll()
+                .antMatchers("/api/auth/login").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/user/**").authenticated()
+                .anyRequest().permitAll()
                 .and()
                 .formLogin()
                 .loginPage("/login")

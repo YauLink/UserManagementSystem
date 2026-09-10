@@ -3,6 +3,7 @@ package com.myapp.usermanagement.service;
 import com.myapp.usermanagement.dto.AuthResponseDTO;
 import com.myapp.usermanagement.model.UserAccount;
 import com.myapp.usermanagement.repository.UserAccountRepository;
+import com.myapp.usermanagement.security.JwtService;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -11,9 +12,14 @@ import java.util.Optional;
 public class AuthService {
 
     private final UserAccountRepository userAccountRepository;
+    private final JwtService jwtService;
 
-    public AuthService(UserAccountRepository userAccountRepository) {
+    public AuthService(
+            UserAccountRepository userAccountRepository,
+            JwtService jwtService) {
+
         this.userAccountRepository = userAccountRepository;
+        this.jwtService = jwtService;
     }
 
     public AuthResponseDTO login(String username, String password) {
@@ -24,7 +30,8 @@ public class AuthService {
             return new AuthResponseDTO(
                     null,
                     null,
-                    "Invalid username or password"
+                    "Invalid username or password",
+                    null
             );
         }
 
@@ -34,7 +41,8 @@ public class AuthService {
             return new AuthResponseDTO(
                     null,
                     null,
-                    "User account is inactive"
+                    "User account is inactive",
+                    null
             );
         }
 
@@ -42,16 +50,25 @@ public class AuthService {
             return new AuthResponseDTO(
                     null,
                     null,
-                    "Invalid username or password"
+                    "Invalid username or password",
+                    null
             );
         }
 
         String fullName = user.getFirstName() + " " + user.getLastName();
 
+        String token = jwtService.generateToken(
+                user.getId(),
+                user.getUsername(),
+                fullName,
+                user.getRole().name()
+        );
+
         return new AuthResponseDTO(
                 user.getId(),
                 fullName,
-                "Authentication successful"
+                "Authentication successful",
+                token
         );
     }
 }

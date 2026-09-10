@@ -1,18 +1,42 @@
 package com.myapp.usermanagement.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
 public class AuthResponseDTO {
 
     private Long userId;
+
     private String fullName;
+
     private String message;
+
+    private String token;
 
     public AuthResponseDTO() {
     }
 
-    public AuthResponseDTO(Long userId, String fullName, String message) {
+    public AuthResponseDTO(
+            Long userId,
+            String fullName,
+            String message) {
+
         this.userId = userId;
         this.fullName = fullName;
         this.message = message;
+    }
+
+    public AuthResponseDTO(
+            Long userId,
+            String fullName,
+            String message,
+            String token) {
+
+        this.userId = userId;
+        this.fullName = fullName;
+        this.message = message;
+        this.token = token;
     }
 
     public Long getUserId() {
@@ -37,5 +61,13 @@ public class AuthResponseDTO {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }
