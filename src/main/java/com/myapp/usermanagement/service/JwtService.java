@@ -1,4 +1,4 @@
-package com.myapp.usermanagement.security;
+package com.myapp.usermanagement.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -47,5 +47,35 @@ public class JwtService {
                 .setExpiration(expirationDate)
                 .signWith(signingKey, SignatureAlgorithm.HS256)
                 .compact();
+    }
+
+    public Claims extractAllClaims(String token) {
+
+        return Jwts.parserBuilder()
+                .setSigningKey(signingKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    public String extractUsername(String token) {
+
+        return extractAllClaims(token).getSubject();
+    }
+
+    public String extractRole(String token) {
+
+        return extractAllClaims(token)
+                .get("role", String.class);
+    }
+
+    public boolean isTokenValid(String token) {
+
+        try {
+            extractAllClaims(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

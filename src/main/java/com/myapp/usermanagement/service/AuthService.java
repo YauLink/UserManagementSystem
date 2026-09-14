@@ -3,7 +3,7 @@ package com.myapp.usermanagement.service;
 import com.myapp.usermanagement.dto.AuthResponseDTO;
 import com.myapp.usermanagement.model.UserAccount;
 import com.myapp.usermanagement.repository.UserAccountRepository;
-import com.myapp.usermanagement.security.JwtService;
+import com.myapp.usermanagement.service.JwtService;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -24,7 +24,8 @@ public class AuthService {
 
     public AuthResponseDTO login(String username, String password) {
 
-        Optional<UserAccount> userOptional = userAccountRepository.findByUsername(username);
+        Optional<UserAccount> userOptional =
+                userAccountRepository.findByUsername(username);
 
         if (userOptional.isEmpty()) {
             return new AuthResponseDTO(
@@ -55,14 +56,16 @@ public class AuthService {
             );
         }
 
-        String fullName = user.getFirstName() + " " + user.getLastName();
+        String fullName =
+                user.getFirstName() + " " + user.getLastName();
 
-        String token = jwtService.generateToken(
-                user.getId(),
-                user.getUsername(),
-                fullName,
-                user.getRole().name()
-        );
+        String token =
+                jwtService.generateToken(
+                        user.getId(),
+                        user.getUsername(),
+                        fullName,
+                        user.getRole().name()
+                );
 
         return new AuthResponseDTO(
                 user.getId(),
