@@ -69,26 +69,6 @@ public class UserAccountService {
         return false;
     }
 
-    /*public UserAccount updateStatus(Long userId, UserAccount.Status status) {
-        Optional<UserAccount> user = userAccountRepository.findById(userId);
-        if(user.isPresent()) {
-            UserAccount userAccount = user.get();
-            userAccount.setStatus(status);
-            return userAccountRepository.save(userAccount);
-        }
-        return null;
-    }
-
-    public UserAccount updateRole(Long userId, UserAccount.Role role) {
-        Optional<UserAccount> user = userAccountRepository.findById(userId);
-        if(user.isPresent()) {
-            UserAccount userAccount = user.get();
-            userAccount.setRole(role);
-            return userAccountRepository.save(userAccount);
-        }
-        return null;
-    }*/
-
     public UserAccount updateUserInformation(Long userId, UserAccountDTO accountDTO) {
         Optional<UserAccount> user = userAccountRepository.findById(userId);
         if(user.isPresent()) {
