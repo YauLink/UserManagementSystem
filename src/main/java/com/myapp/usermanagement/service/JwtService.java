@@ -21,6 +21,14 @@ public class JwtService {
             @Value("${jwt.secret}") String secret,
             @Value("${jwt.expiration}") long expiration) {
 
+        if (secret == null || secret.isBlank()) {
+            throw new IllegalStateException("JWT_SECRET must be configured");
+        }
+
+        if (expiration <= 0) {
+            throw new IllegalStateException("JWT expiration must be positive");
+        }
+
         this.signingKey = Keys.hmacShaKeyFor(
                 Decoders.BASE64.decode(secret)
         );
@@ -72,9 +80,17 @@ public class JwtService {
     public boolean isTokenValid(String token) {
 
         try {
-            extractAllClaims(token);
+            Claims claims = extractAllClaims(token);
+
+            if (claims.getSubject() == null
+                    || claims.get("userId", Long.class) == null
+                    || claims.get("fullName", String.class) == null
+                    || claims.get("role", String.class) == null) {
+                return false;
+            }
+
             return true;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             return false;
         }
     }

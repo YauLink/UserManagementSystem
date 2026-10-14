@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,17 +19,21 @@ import java.util.Optional;
 public class UserAccountService {
 
     private final UserAccountRepository userAccountRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserAccountService(UserAccountRepository userAccountRepository) {
+    public UserAccountService(
+            UserAccountRepository userAccountRepository,
+            PasswordEncoder passwordEncoder) {
         this.userAccountRepository = userAccountRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
     public UserAccount createUser(UserAccountDTO accountDTO) {
         UserAccount userAccount = new UserAccount();
         userAccount.setUsername(accountDTO.getUsername());
-        userAccount.setPassword(accountDTO.getPassword());
+        userAccount.setPassword(passwordEncoder.encode(accountDTO.getPassword()));
         userAccount.setFirstName(accountDTO.getFirstName());
         userAccount.setLastName(accountDTO.getLastName());
         userAccount.setRole(accountDTO.getRole());
@@ -43,7 +48,7 @@ public class UserAccountService {
         Optional<UserAccount> user = userAccountRepository.findByUsername(username);
         if (user.isPresent()) {
             UserAccount userAccount = user.get(); //as of now take first found user with this username
-            return userAccount.getPassword().equals(rawPassword);
+            return passwordMatches(rawPassword, userAccount.getPassword());
         }
         return false;  // Username not found
     }
@@ -76,7 +81,7 @@ public class UserAccountService {
             userAccount.updateInfo(
                     accountDTO.getLastName(),
                     accountDTO.getFirstName(),
-                    accountDTO.getPassword(),
+                    passwordEncoder.encode(accountDTO.getPassword()),
                     accountDTO.getUsername()
             );
             return userAccountRepository.save(userAccount);
@@ -142,6 +147,18 @@ public class UserAccountService {
                 .password(user.getPassword())
                 .roles(user.getRole().name())
                 .build();
+    }
+
+    private boolean passwordMatches(String rawPassword, String storedPassword) {
+        if (rawPassword == null || storedPassword == null) {
+            return false;
+        }
+
+        if (storedPassword.startsWith("$2")) {
+            return passwordEncoder.matches(rawPassword, storedPassword);
+        }
+
+        return rawPassword.equals(storedPassword);
     }
 
 }
