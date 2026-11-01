@@ -4,7 +4,6 @@ import com.myapp.usermanagement.dto.AuthResponseDTO;
 import com.myapp.usermanagement.model.UserAccount;
 import com.myapp.usermanagement.repository.UserAccountRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
@@ -12,12 +11,9 @@ import java.util.Optional;
 public class AuthService {
 
     private final UserAccountRepository userAccountRepository;
-    private final PasswordEncoder passwordEncoder;
 
-    public AuthService(UserAccountRepository userAccountRepository,
-                       PasswordEncoder passwordEncoder) {
+    public AuthService(UserAccountRepository userAccountRepository) {
         this.userAccountRepository = userAccountRepository;
-        this.passwordEncoder = passwordEncoder;
     }
 
     public AuthResponseDTO login(String username, String password) {
@@ -42,7 +38,7 @@ public class AuthService {
             );
         }
 
-        if (!passwordEncoder.matches(password, user.getPassword())) {
+        if (!user.getPassword().equals(password)) {
             return new AuthResponseDTO(
                     null,
                     null,
