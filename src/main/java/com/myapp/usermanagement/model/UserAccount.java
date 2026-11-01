@@ -1,6 +1,7 @@
 package com.myapp.usermanagement.model;
 
 import javax.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDateTime;
 
 @Entity
@@ -14,6 +15,7 @@ public class UserAccount {
     private String username;
 
     @Column(name = "password")
+    @JsonIgnore
     private String password;
 
     @Column(name = "firstName")
@@ -119,5 +121,9 @@ public class UserAccount {
 
     public void setDeletionRequestedAt(LocalDateTime deletionRequestedAt) {
         this.deletionRequestedAt = deletionRequestedAt;
+    }
+
+    public LocalDateTime getDeletionRequestedAt() {
+        return deletionRequestedAt;
     }
 }

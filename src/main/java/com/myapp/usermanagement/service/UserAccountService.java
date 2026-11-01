@@ -9,6 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,17 +21,20 @@ import java.util.Optional;
 public class UserAccountService {
 
     private final UserAccountRepository userAccountRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserAccountService(UserAccountRepository userAccountRepository) {
+    public UserAccountService(UserAccountRepository userAccountRepository,
+                              PasswordEncoder passwordEncoder) {
         this.userAccountRepository = userAccountRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
     public UserAccount createUser(UserAccountDTO accountDTO) {
         UserAccount userAccount = new UserAccount();
         userAccount.setUsername(accountDTO.getUsername());
-        userAccount.setPassword(accountDTO.getPassword());
+        userAccount.setPassword(passwordEncoder.encode(accountDTO.getPassword()));
         userAccount.setFirstName(accountDTO.getFirstName());
         userAccount.setLastName(accountDTO.getLastName());
         userAccount.setRole(accountDTO.getRole());
@@ -43,7 +49,7 @@ public class UserAccountService {
         Optional<UserAccount> user = userAccountRepository.findByUsername(username);
         if (user.isPresent()) {
             UserAccount userAccount = user.get(); //as of now take first found user with this username
-            return userAccount.getPassword().equals(rawPassword);
+            return passwordEncoder.matches(rawPassword, userAccount.getPassword());
         }
         return false;  // Username not found
     }
@@ -54,6 +60,7 @@ public class UserAccountService {
         if (user.isPresent()) {
             UserAccount userAccount = user.get();
             userAccount.setStatus(UserAccount.Status.INACTIVE);
+            userAccount.setDeletionRequestedAt(LocalDateTime.now());
             userAccountRepository.save(userAccount);
             return true;
         }
@@ -93,12 +100,12 @@ public class UserAccountService {
         Optional<UserAccount> user = userAccountRepository.findById(userId);
         if(user.isPresent()) {
             UserAccount userAccount = user.get();
-            userAccount.updateInfo(
-                    accountDTO.getLastName(),
-                    accountDTO.getFirstName(),
-                    accountDTO.getPassword(),
-                    accountDTO.getUsername()
-            );
+            userAccount.setLastName(accountDTO.getLastName());
+            userAccount.setFirstName(accountDTO.getFirstName());
+            userAccount.setUsername(accountDTO.getUsername());
+            if (accountDTO.getPassword() != null && !accountDTO.getPassword().isBlank()) {
+                userAccount.setPassword(passwordEncoder.encode(accountDTO.getPassword()));
+            }
             return userAccountRepository.save(userAccount);
         }
         return null;
@@ -147,7 +154,11 @@ public class UserAccountService {
     @Transactional
     public int permanentlyDeleteInactiveUsers(int days) {
         LocalDateTime threshold = LocalDateTime.now().minusDays(days);
-        List<UserAccount> usersToDelete = userAccountRepository.findUsersForDeletion(threshold);
+        if (days < 0) {
+            throw new IllegalArgumentException("days must be non-negative");
+        }
+        List<UserAccount> usersToDelete = userAccountRepository.findUsersForDeletion(
+                UserAccount.Status.INACTIVE, threshold);
         userAccountRepository.deleteAll(usersToDelete);
         return usersToDelete.size();
     }
@@ -157,7 +168,11 @@ public class UserAccountService {
                 .orElseThrow(() ->
                         new UsernameNotFoundException("User not found: " + username));
 
-        return org.springframework.security.core.userdetails.User
+        if (user.getStatus() != UserAccount.Status.ACTIVE) {
+            throw new DisabledException("User account is inactive");
+        }
+
+        return User
                 .withUsername(user.getUsername())
                 .password(user.getPassword())
                 .roles(user.getRole().name())

@@ -18,6 +18,8 @@ public interface UserAccountRepository extends JpaRepository<UserAccount, Long> 
 
     List<UserAccount> findAll();
 
-    @Query("SELECT u FROM UserAccount u WHERE u.createdDate < :date")
-    List<UserAccount> findUsersForDeletion(@Param("date") LocalDateTime someDate);
+    @Query("SELECT u FROM UserAccount u WHERE u.status = :status AND u.deletionRequestedAt < :date")
+    List<UserAccount> findUsersForDeletion(
+            @Param("status") UserAccount.Status status,
+            @Param("date") LocalDateTime date);
 }
