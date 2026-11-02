@@ -37,14 +37,20 @@ public class UserController {
             return "redirect:/user?error=AccessDenied";
         }
         model.addAttribute("user", user);
+        model.addAttribute("adminView", false);
+        model.addAttribute("backUrl", "/user");
         return "userView";
     }
 
     // Show user list
     @GetMapping
-    public String showAllUsers(Model model) {
-        List<UserAccount> users = userAccountService.fetchAllUsers();
+    public String showAllUsers(Model model, Authentication authentication) {
+        UserAccount currentUser = userAccountService.fetchByUsername(authentication.getName());
+        List<UserAccount> users = currentUser == null
+                ? List.of()
+                : List.of(currentUser);
         model.addAttribute("users", users);
+        model.addAttribute("adminView", false);
         return "userList";
     }
 
@@ -59,7 +65,7 @@ public class UserController {
             return "redirect:/user?error=AccessDenied";
         }
         userAccountService.updateUserInformation(id, accountDTO);
-        return "redirect:/users/" + id;
+        return "redirect:/user/" + id;
     }
 
     // Account deletion

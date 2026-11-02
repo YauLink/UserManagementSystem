@@ -57,12 +57,13 @@
         </span>
   </p>
 
-  <a th:href="@{/users}"
+  <a th:href="${backUrl}"
      class="btn btn-secondary">
     Back to List
   </a>
 
-  <a th:href="@{/users/edit/{id}(id=${user.id})}"
+  <a th:if="${adminView}"
+     th:href="@{/admin/users/edit/{id}(id=${user.id})}"
      class="btn btn-primary">
     Edit User
   </a>

@@ -30,6 +30,7 @@ public class AdminController {
         Map<String, List<UserAccount>> map = new HashMap<>();
         map.put("users", users);
         model.addAllAttributes(map);
+        model.addAttribute("adminView", true);
         return "userList";
     }
 
@@ -43,6 +44,8 @@ public class AdminController {
             return "redirect:/admin/users?error=UserNotFound";
         }
         model.addAttribute("user", user);
+        model.addAttribute("adminView", true);
+        model.addAttribute("backUrl", "/admin/users");
         return "userView";
     }
 
@@ -50,6 +53,7 @@ public class AdminController {
     @GetMapping("/users/new")
     public String showCreateUserForm(Model model) {
         model.addAttribute("user", new UserAccountDTO());
+        model.addAttribute("formAction", "/admin/users/create");
         return "userEdit";
     }
 
@@ -68,6 +72,7 @@ public class AdminController {
             return "redirect:/admin/users?error=UserNotFound";
         }
         model.addAttribute("user", user);
+        model.addAttribute("formAction", "/admin/users/update/" + id);
         return "userEdit";
     }
 
@@ -79,7 +84,7 @@ public class AdminController {
     }
 
     // Soft delete user
-    @GetMapping("/users/delete/{id}")
+    @PostMapping("/users/delete/{id}")
     public String softDeleteUser(@PathVariable Long id) {
         boolean deleted = userAccountService.softDeleteUser(id);
         return deleted ? "redirect:/admin/users?success=UserDeactivated"
@@ -87,7 +92,7 @@ public class AdminController {
     }
 
     // Hard delete user
-    @GetMapping("/users/hard-delete/{id}")
+    @PostMapping("/users/hard-delete/{id}")
     public String hardDeleteUser(@PathVariable Long id) {
         boolean deleted = userAccountService.hardDeleteUser(id);
         return deleted ? "redirect:/admin/users?success=UserDeleted"
@@ -95,7 +100,7 @@ public class AdminController {
     }
 
     // Cleanup inactive users
-    @GetMapping("/cleanup")
+    @PostMapping("/cleanup")
     public String cleanupInactiveUsers(@RequestParam(defaultValue = "30") int days) {
         int deletedCount = userAccountService.permanentlyDeleteInactiveUsers(days);
         return "redirect:/admin/users?success=" + deletedCount + " users permanently deleted";

@@ -4,6 +4,7 @@ import com.myapp.usermanagement.dto.AuthResponseDTO;
 import com.myapp.usermanagement.model.UserAccount;
 import com.myapp.usermanagement.repository.UserAccountRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
@@ -11,9 +12,15 @@ import java.util.Optional;
 public class AuthService {
 
     private final UserAccountRepository userAccountRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
-    public AuthService(UserAccountRepository userAccountRepository) {
+    public AuthService(UserAccountRepository userAccountRepository,
+                       PasswordEncoder passwordEncoder,
+                       JwtService jwtService) {
         this.userAccountRepository = userAccountRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
     }
 
     public AuthResponseDTO login(String username, String password) {
@@ -38,7 +45,7 @@ public class AuthService {
             );
         }
 
-        if (!user.getPassword().equals(password)) {
+        if (!passwordEncoder.matches(password, user.getPassword())) {
             return new AuthResponseDTO(
                     null,
                     null,
@@ -48,10 +55,17 @@ public class AuthService {
 
         String fullName = user.getFirstName() + " " + user.getLastName();
 
+        String token = jwtService.generateToken(
+                user.getId(),
+                user.getUsername(),
+                fullName,
+                user.getRole().name());
+
         return new AuthResponseDTO(
                 user.getId(),
                 fullName,
-                "Authentication successful"
+                "Authentication successful",
+                token
         );
     }
 }
