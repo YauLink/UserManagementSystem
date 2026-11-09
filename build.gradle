@@ -3,6 +3,7 @@ plugins {
 	id 'war'
 	id 'org.springframework.boot' version '2.7.18'
 	id 'io.spring.dependency-management' version '1.1.7'
+	id 'jacoco'
 }
 
 group = 'com.myapp.usermanagement'
@@ -55,4 +56,12 @@ tasks.named('test') {
 			}
 		}
 	}
+}
+
+jacocoTestReport {
+	 dependsOn test
+	 reports {
+		 xml.required = true
+		 html.required = true
+	 }
 }

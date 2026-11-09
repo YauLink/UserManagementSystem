@@ -30,19 +30,32 @@ class AuthServiceTest {
     private AuthService authService;
 
     @Test
-    void migratesLegacyPlaintextPasswordAfterSuccessfulLogin() {
-        UserAccount user = activeUser("legacy-password");
+    void authenticatesActiveUserWithMatchingPassword() {
+        UserAccount user = activeUser("stored-password");
 
         when(repository.findByUsername("john")).thenReturn(Optional.of(user));
-        when(passwordEncoder.encode("legacy-password")).thenReturn("$2b$encoded");
+        when(passwordEncoder.matches("stored-password", "stored-password")).thenReturn(true);
         when(jwtService.generateToken(7L, "john", "John Doe", "USER"))
                 .thenReturn("jwt");
 
-        var response = authService.login("john", "legacy-password");
+        var response = authService.login("john", "stored-password");
 
         assertEquals("jwt", response.getToken());
-        assertEquals("$2b$encoded", user.getPassword());
-        verify(repository).save(user);
+        verify(passwordEncoder).matches("stored-password", "stored-password");
+        verify(repository, never()).save(any());
+    }
+
+    @Test
+    void rejectsInactiveUserBeforeCheckingPassword() {
+        UserAccount user = activeUser("stored-password");
+        user.setStatus(UserAccount.Status.INACTIVE);
+        when(repository.findByUsername("john")).thenReturn(Optional.of(user));
+
+        var response = authService.login("john", "stored-password");
+
+        assertNull(response.getToken());
+        assertEquals("User account is inactive", response.getMessage());
+        verifyNoInteractions(passwordEncoder, jwtService);
     }
 
     @Test
