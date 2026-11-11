@@ -2,6 +2,7 @@ package com.myapp.usermanagement.controller.rest;
 
 import com.myapp.usermanagement.dto.AuthRequestDTO;
 import com.myapp.usermanagement.dto.AuthResponseDTO;
+import com.myapp.usermanagement.dto.RegistrationRequestDTO;
 import com.myapp.usermanagement.service.AuthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +38,16 @@ public class RestAuthController {
             return ResponseEntity.ok(response);
         } catch (AuthenticationException ex) {
             return ResponseEntity.status(401).body("Invalid username or password");
+        }
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@Valid @RequestBody RegistrationRequestDTO request) {
+        try {
+            authService.register(request);
+            return ResponseEntity.status(201).body("Registration successful");
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
         }
     }
 }

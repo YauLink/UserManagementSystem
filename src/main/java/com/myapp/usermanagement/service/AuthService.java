@@ -2,6 +2,7 @@ package com.myapp.usermanagement.service;
 
 import com.myapp.usermanagement.dto.AuthResponseDTO;
 import com.myapp.usermanagement.model.UserAccount;
+import com.myapp.usermanagement.dto.RegistrationRequestDTO;
 import com.myapp.usermanagement.repository.UserAccountRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -67,5 +68,21 @@ public class AuthService {
                 "Authentication successful",
                 token
         );
+    }
+
+    public UserAccount register(RegistrationRequestDTO request) {
+        String username = request.getUsername().trim();
+        if (userAccountRepository.existsByUsername(username)) {
+            throw new IllegalArgumentException("Username is already registered");
+        }
+        UserAccount user = new UserAccount();
+        user.setUsername(username);
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setFirstName(request.getFirstName().trim());
+        user.setLastName(request.getLastName().trim());
+        user.setRole(UserAccount.Role.USER);
+        user.setStatus(UserAccount.Status.ACTIVE);
+        user.setCreatedDate(java.time.LocalDateTime.now());
+        return userAccountRepository.save(user);
     }
 }

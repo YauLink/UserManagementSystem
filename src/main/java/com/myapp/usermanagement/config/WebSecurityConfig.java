@@ -13,9 +13,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.web.header.writers.StaticHeadersWriter;
+import org.springframework.security.config.Customizer;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig {
 
     private final UserAccountService userAccountService;
@@ -50,6 +54,13 @@ public class WebSecurityConfig {
                 .csrf()
                 .ignoringAntMatchers("/api/**")
                 .and()
+                .headers(headers -> {
+                    headers.contentTypeOptions(Customizer.withDefaults());
+                    headers.frameOptions(frame -> frame.deny());
+                    headers.addHeaderWriter(new StaticHeadersWriter(
+                            "Strict-Transport-Security",
+                            "max-age=31536000; includeSubDomains"));
+                })
                 .authorizeRequests()
                 .antMatchers("/", "/login", "/register").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
@@ -61,6 +72,9 @@ public class WebSecurityConfig {
                 .loginPage("/login")
                 .defaultSuccessUrl("/user", true)
                 .permitAll()
+                .and()
+                .sessionManagement()
+                .sessionFixation().migrateSession()
                 .and()
                 .logout()
                 .logoutUrl("/logout")
